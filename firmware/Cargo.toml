@@ -1,0 +1,10 @@
+[package]
+name = "firmware"
+edition = "2021"
+version.workspace = true
+authors.workspace = true
+
+[dependencies]
+
+[lints]
+workspace = true
