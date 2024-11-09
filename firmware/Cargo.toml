@@ -5,6 +5,7 @@ version.workspace = true
 authors.workspace = true
 
 [dependencies]
+v4l = "0.14.0"
 
 [lints]
 workspace = true
