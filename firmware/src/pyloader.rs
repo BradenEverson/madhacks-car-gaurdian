@@ -29,7 +29,6 @@ impl<INPUT: Default + PyArg, OUTPUT: Default + FromStr> PyLoader<INPUT, OUTPUT> 
 
     /// Runs a python script with a certain input and returns an appropriate output
     pub fn run(&self, input: INPUT) -> Option<OUTPUT> {
-        println!("Running script at path: {:?}", self.script);
         let mut output = Command::new("python3");
         let output = output.arg(&self.script);
 
