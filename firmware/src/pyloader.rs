@@ -1,10 +1,19 @@
 //! Helper structs for binding to a Python file and contextually storing its result
 
-use std::{marker::PhantomData, path::PathBuf};
+use std::{
+    marker::PhantomData,
+    path::PathBuf,
+    process::{Command, Stdio},
+    str::FromStr,
+};
+
+use py_input::PyArg;
+
+pub mod py_input;
 
 /// A struct responsible for holding onto a python script and returning it's execution
 #[derive(Default, Debug, Clone)]
-pub struct PyLoader<INPUT, OUTPUT> {
+pub struct PyLoader<INPUT: PyArg, OUTPUT: FromStr> {
     /// The filepath to the python script
     script: PathBuf,
     /// The current input being fed to the python script
@@ -12,15 +21,30 @@ pub struct PyLoader<INPUT, OUTPUT> {
     output: PhantomData<OUTPUT>,
 }
 
-impl<INPUT: Default, OUTPUT: Default> PyLoader<INPUT, OUTPUT> {
+impl<INPUT: Default + PyArg, OUTPUT: Default + FromStr> PyLoader<INPUT, OUTPUT> {
     /// Creates a new PyLoader builder object
     pub fn builder() -> Builder<INPUT, OUTPUT> {
         Builder::default()
     }
 
     /// Runs a python script with a certain input and returns an appropriate output
-    pub fn run(_input: INPUT) -> OUTPUT {
-        todo!()
+    pub fn run(&self, input: INPUT) -> Option<OUTPUT> {
+        println!("Running script at path: {:?}", self.script);
+        let mut output = Command::new("python3");
+        let output = output.arg(&self.script);
+
+        for arg in input.to_cli_arg().trim().split(' ') {
+            output.arg(arg);
+        }
+        let output = output.stdout(Stdio::piped()).output().ok()?;
+
+        if output.status.success() {
+            let stdout_str = String::from_utf8(output.stdout).ok()?;
+            let result = OUTPUT::from_str(stdout_str.trim()).ok()?;
+            Some(result)
+        } else {
+            None
+        }
     }
 }
 
@@ -35,7 +59,7 @@ pub struct Builder<INPUT, OUTPUT> {
     output: PhantomData<OUTPUT>,
 }
 
-impl<INPUT, OUTPUT> Builder<INPUT, OUTPUT> {
+impl<INPUT: PyArg, OUTPUT: FromStr> Builder<INPUT, OUTPUT> {
     /// Loads a python script
     pub fn with_script<P: Into<PathBuf>>(mut self, path: P) -> Self {
         self.script = Some(path.into());
@@ -62,5 +86,16 @@ mod tests {
             .with_script("foo/bar.py")
             .build();
         assert!(script_runner.is_some())
+    }
+
+    #[test]
+    fn one_plus_one_from_python() {
+        let one_plus_one = PyLoader::<[i32; 2], i32>::builder()
+            .with_script("test_scripts/add_two_nums.py")
+            .build()
+            .expect("Get PyLoader");
+
+        let result = one_plus_one.run([1, 1]).expect("1 + 1 = ?");
+        assert_eq!(result, 2)
     }
 }
