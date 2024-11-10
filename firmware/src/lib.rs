@@ -3,3 +3,4 @@
 
 pub mod peripheral;
 pub mod pyloader;
+pub mod server;
