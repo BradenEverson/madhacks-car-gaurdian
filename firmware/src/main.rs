@@ -18,7 +18,7 @@ use v4l::{buffer::Type, Device};
 
 #[tokio::main]
 async fn main() {
-    let listener = TcpListener::bind("0.0.0.0:0").await.unwrap();
+    let listener = TcpListener::bind("0.0.0.0:1911").await.unwrap();
     println!(
         "Listening on http://localhost:{}",
         listener.local_addr().unwrap().port()
@@ -38,14 +38,8 @@ async fn main() {
         let mut stream = MmapStream::with_buffers(&dev, Type::VideoCapture, 4)
             .expect("Failed to create buffer stream");
 
-        while let Ok((buf, meta)) = stream.next() {
+        while let Ok((buf, _)) = stream.next() {
             sender.send(buf.to_vec()).expect("Failed to send");
-            println!(
-                "Buffer size: {}, sequence: {}, timestamp: {}",
-                buf.len(),
-                meta.sequence,
-                meta.timestamp
-            );
             let mut file = File::create("frame.jpg").expect("Create new file");
             file.write_all(buf).expect("Write current buffer to image");
 

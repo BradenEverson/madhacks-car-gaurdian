@@ -1,1 +1,58 @@
-Test File
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Binary Message Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            max-width: 600px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Binary Message Viewer</h1>
+    <p>Messages:</p>
+    <div id="output">Connecting...</div>
+
+    <script>
+        const output = document.getElementById("output");
+
+        const socket = new WebSocket("/");
+
+        socket.binaryType = "arraybuffer";
+
+        socket.onopen = () => {
+            output.textContent = "Connected to WebSocket server.";
+        };
+
+        socket.onmessage = (event) => {
+            if (event.data instanceof ArrayBuffer) {
+                const byteArray = new Uint8Array(event.data);
+                const hexString = Array.from(byteArray)
+                    .map(byte => byte.toString(16).padStart(2, '0'))
+                    .join(' ');
+                output.textContent += `\nReceived binary message: ${hexString}`;
+            } else {
+                output.textContent += `\nReceived non-binary message: ${event.data}`;
+            }
+        };
+
+        socket.onerror = (error) => {
+            output.textContent += `\nError: ${error.message}`;
+        };
+
+        socket.onclose = () => {
+            output.textContent += "\nWebSocket connection closed.";
+        };
+    </script>
+</body>
+</html>
