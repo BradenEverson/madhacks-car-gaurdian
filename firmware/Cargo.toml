@@ -11,6 +11,7 @@ http-body-util = "0.1.2"
 hyper = { version = "1.4.1", features = ["full"] }
 hyper-tungstenite = "0.14.0"
 hyper-util = { version = "0.1.7", features = ["tokio", "full"] }
+jetgpio = { version = "0.1.0", features = ["orin"] }
 tokio = { version = "1.39.2", features = ["full"] }
 tokio-tungstenite = "0.23.1"
 v4l = "0.14.0"

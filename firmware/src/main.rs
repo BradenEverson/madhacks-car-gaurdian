@@ -10,6 +10,8 @@ use firmware::server::service::ServerService;
 use firmware::server::ServerState;
 use hyper::server::conn::http1;
 use hyper_util::rt::TokioIo;
+use jetgpio::gpio::valid_pins::Pin5;
+use jetgpio::Gpio;
 use tokio::net::TcpListener;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use v4l::io::traits::CaptureStream;
@@ -18,6 +20,8 @@ use v4l::{buffer::Type, Device};
 
 #[tokio::main]
 async fn main() {
+    let gpio = Gpio::new().expect("Initialize GPIO");
+    let mut relay = gpio.get_output(Pin5).expect("Initialize relay pin");
     let listener = TcpListener::bind("0.0.0.0:1911").await.unwrap();
     println!(
         "Listening on http://localhost:{}",
@@ -49,7 +53,7 @@ async fn main() {
 
             if distracted_driver == 1 {
                 println!("Driver Distracted!!! Delivering Payload");
-                peripheral::deliver_distracted_payload();
+                peripheral::deliver_distracted_payload(&mut relay);
             }
         }
     });
