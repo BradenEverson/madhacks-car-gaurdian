@@ -13,6 +13,9 @@ def process_image(image_path):
     img = img.resize((640, 640))
     
     img = img.convert("L")
+    img = img.transpose(Image.FLIP_TOP_BOTTOM)
+
+    img.save("Flipped Grayscale.jpg")
     
     img_array = np.array(img, dtype=np.float32)
     
