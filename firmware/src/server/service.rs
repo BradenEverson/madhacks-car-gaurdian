@@ -1,18 +1,20 @@
 //! Server Service Struct Implementation
 
-use super::ServerState;
 use futures::{stream::SplitSink, StreamExt};
+use futures_util::Future;
 use http_body_util::Full;
 use hyper::{
     body::{self, Bytes},
     service::Service,
     upgrade::Upgraded,
-    Method, Request, Response, StatusCode,
+    Method, StatusCode,
 };
-use std::{fs::File, io::Read, sync::Arc};
-use std::{future::Future, pin::Pin};
+use hyper::{Request, Response};
+use std::{fs::File, io::Read, pin::Pin, sync::Arc};
 use tokio::sync::RwLock;
 use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
+
+use super::ServerState;
 
 /// A websocket write stream
 pub type WebSocketWriteStream =
@@ -41,19 +43,13 @@ impl Service<Request<body::Incoming>> for ServerService {
         if hyper_tungstenite::is_upgrade_request(&req) {
             let (response, websocket) =
                 hyper_tungstenite::upgrade(&mut req, None).expect("Error upgrading to WebSocket");
-
             let state = self.state.clone();
 
             tokio::spawn(async move {
-                let websocket = websocket.await;
-                match websocket {
-                    Ok(ws) => {
-                        let (writer, _) = ws.split();
-                        {
-                            state.write().await.assign_websocket(writer);
-                        }
-                    }
-                    Err(err) => panic!("Websocket connect error: {err}"),
+                let ws = websocket.await.expect("Error awaiting websocket handshake");
+                let (writer, _) = ws.split();
+                {
+                    state.write().await.assign_websocket(writer);
                 }
             });
 

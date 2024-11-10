@@ -1,58 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Binary Message Viewer</title>
+    <title>WebSocket Image Stream</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
         }
-        #output {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-            max-width: 600px;
-            white-space: pre-wrap;
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
+
 <body>
-    <h1>WebSocket Binary Message Viewer</h1>
-    <p>Messages:</p>
-    <div id="output">Connecting...</div>
+    <canvas id="imageCanvas"></canvas>
 
     <script>
-        const output = document.getElementById("output");
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
 
-        const socket = new WebSocket("/");
+        // Set canvas dimensions to match the image dimensions
+        const imageWidth = 640;
+        const imageHeight = 480;
+        canvas.width = imageWidth;
+        canvas.height = imageHeight;
 
-        socket.binaryType = "arraybuffer";
+        // Establish WebSocket connection
+        const ws = new WebSocket('ws://' + window.location.host + '/');
+        ws.binaryType = 'arraybuffer';
 
-        socket.onopen = () => {
-            output.textContent = "Connected to WebSocket server.";
+        ws.onopen = () => {
+            console.log('WebSocket connection established');
         };
 
-        socket.onmessage = (event) => {
+        ws.onmessage = (event) => {
             if (event.data instanceof ArrayBuffer) {
-                const byteArray = new Uint8Array(event.data);
-                const hexString = Array.from(byteArray)
-                    .map(byte => byte.toString(16).padStart(2, '0'))
-                    .join(' ');
-                output.textContent += `\nReceived binary message: ${hexString}`;
-            } else {
-                output.textContent += `\nReceived non-binary message: ${event.data}`;
+                const arrayBuffer = event.data;
+                const imageData = new Uint8ClampedArray(arrayBuffer);
+
+                // Validate data size
+                if (imageData.length !== imageWidth * imageHeight * 4) {
+                    console.error('Data size does not match 640x480 RGBA dimensions.');
+                    return;
+                }
+
+                // Create ImageData object and render it to canvas
+                const imgData = new ImageData(imageData, imageWidth, imageHeight);
+                ctx.putImageData(imgData, 0, 0);
             }
         };
 
-        socket.onerror = (error) => {
-            output.textContent += `\nError: ${error.message}`;
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
         };
 
-        socket.onclose = () => {
-            output.textContent += "\nWebSocket connection closed.";
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
         };
     </script>
 </body>
+
 </html>
+
