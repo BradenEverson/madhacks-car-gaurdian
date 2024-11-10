@@ -1,75 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Image Stream</title>
-    <style>
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            width: 100%;
-            height: 100%;
-        }
-
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Gaurdian</title>
 </head>
-
 <body>
-    <canvas id="imageCanvas"></canvas>
+  <h1>Car Gaurdian - Real Time Dashboard</h1>
+  <canvas id="imageCanvas" width="640" height="480"></canvas>
 
-    <script>
-        const canvas = document.getElementById('imageCanvas');
-        const ctx = canvas.getContext('2d');
+  <script>
+    const canvas = document.getElementById('imageCanvas');
+    const context = canvas.getContext('2d');
 
-        // Set canvas dimensions to match the image dimensions
-        const imageWidth = 640;
-        const imageHeight = 480;
-        canvas.width = imageWidth;
-        canvas.height = imageHeight;
+    const ws = new WebSocket('/');
 
-        // Establish WebSocket connection
-        const ws = new WebSocket('ws://' + window.location.host + '/');
-        ws.binaryType = 'arraybuffer';
+    ws.binaryType = 'arraybuffer';
+    ws.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
 
-        ws.onopen = () => {
-            console.log('WebSocket connection established');
+    ws.onmessage = (event) => {
+      if (event.data instanceof ArrayBuffer) {
+        const blob = new Blob([event.data], { type: 'image/jpeg' });
+        const img = new Image();
+        
+        img.onload = () => {
+          context.drawImage(img, 0, 0, 640, 480);
         };
+        
+        img.src = URL.createObjectURL(blob);
+      }
+    };
 
-        ws.onmessage = (event) => {
-            if (event.data instanceof ArrayBuffer) {
-                const arrayBuffer = event.data;
-                const imageData = new Uint8ClampedArray(arrayBuffer);
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
 
-                // Validate data size
-                if (imageData.length !== imageWidth * imageHeight * 4) {
-                    console.error('Data size does not match 640x480 RGBA dimensions.');
-                    return;
-                }
-
-                // Create ImageData object and render it to canvas
-                const imgData = new ImageData(imageData, imageWidth, imageHeight);
-                ctx.putImageData(imgData, 0, 0);
-            }
-        };
-
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
-
-        ws.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
-    </script>
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+  </script>
 </body>
-
 </html>
 
