@@ -11,19 +11,19 @@ def process_image(image_path):
     img = Image.open(image_path)
     
     img = img.resize((640, 640))
-    
-    img = img.convert("L")
     img = img.transpose(Image.FLIP_TOP_BOTTOM)
 
-    #img.save("Flipped Grayscale.jpg")
-    
     img_array = np.array(img, dtype=np.float32)
     
-    img_array /= 255.0
+    grayscale_image = 0.2989 * img_array[:, :, 0] + 0.5870 * img_array[:, :, 1] + 0.1140 * img_array[:, :, 2]
     
-    img_array = np.expand_dims(img_array, axis=0)
+    grayscale_image = np.flipud(grayscale_image)
     
-    return img_array
+    grayscale_image /= 255.0
+    
+    grayscale_image = np.expand_dims(grayscale_image, axis=0)
+    
+    return grayscale_image
 
 def load_and_predict(model_path, image_array):
     model = tf.keras.models.load_model(model_path)
@@ -46,4 +46,3 @@ if __name__ == "__main__":
     prediction = load_and_predict(model_path, processed_image)
     
     print(prediction[0][0])
-
