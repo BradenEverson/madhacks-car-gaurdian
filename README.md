@@ -2,16 +2,16 @@
 Welcome to the Car Guardian repository! This is a repository dedicated to storing code towards the Car Guardian project! The Car Guardian is a project that is designed to alert drivers whenever they're distracted
 or about to pass out from a health-related issue. For more information, be sure to roam around the repository!
 
-##Inspiration
+## Inspiration
 Distracted driving is still an issue today like how it was years ago, with over 3,000 individuals dying each year in the U.S. and tens to hundreds of thousands more injured, [Forbes](https://www.forbes.com/advisor/legal/auto-accident/distracted-driving-statistics/) we wanted to create a solution that leverages advanced AI to help keep drivers focused, ultimately aiming to reduce accidents and improve road safety.
  
-##What it Does
+## What it Does
 Car Guardian uses real-time analysis to monitor driver attention. Powered by a convolutional neural network (CNN), and ran by a high performance, Rust based embedded execution engine run through a Jetson Orin Nano. It detects distractions instantly, providing alerts via peripheral interfaces to refocus drivers and prevent accidents.
  
 ## How We Built It
 We trained our CNN model on the [ROSIE Supercomputer](https://www.msoe.edu/about-msoe/news/details/meet-rosie/) enabling high-speed data processing and accuracy. We trained the model using a dataset of distracted drivers on [Roboflow](https://universe.roboflow.com/yolov8-z7kip/distracted-driver-detection-bvtnl) through Jupyter Notebooks. The model itself is serialized and hosted on the Jetson, where the main firmware interfaces directly with Python code to submit image buffers for classification. From the callback that Python writes to Rust, actions such as an alertive buzzer or automatic hazard lights are performed.
  
-## Retrieving the Dataset, Performing Data Pre-Processing & Building / Running the CNN Model
+## Dataset Retrieval, Preprocessing & Training the CNN Model
 ### Getting the Datasets
 We had retrieved the distracted driving datasets from Roboflow using the Roboflow API. Using the secret key, we had downloaded the dataset onto the ROSIE Supercomputer, and had begun the pre-processing stage.
  
