@@ -16,8 +16,8 @@ fn main() {
         .build()
         .expect("Failed to load python");
 
-    let mut dev = Device::new(0).expect("Failed to open camera");
-    let mut stream = MmapStream::with_buffers(&mut dev, Type::VideoCapture, 4)
+    let dev = Device::new(0).expect("Failed to open camera");
+    let mut stream = MmapStream::with_buffers(&dev, Type::VideoCapture, 4)
         .expect("Failed to create buffer stream");
 
     while let Ok((buf, meta)) = stream.next() {
@@ -28,7 +28,7 @@ fn main() {
             meta.timestamp
         );
         let mut file = File::create("frame.jpg").expect("Create new file");
-        file.write_all(&buf).expect("Write current buffer to image");
+        file.write_all(buf).expect("Write current buffer to image");
 
         let distracted_driver = distraction_checker
             .run("frame.jpg".into())

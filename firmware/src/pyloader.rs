@@ -18,6 +18,7 @@ pub struct PyLoader<INPUT: PyArg, OUTPUT: FromStr> {
     script: PathBuf,
     /// The current input being fed to the python script
     input: PhantomData<INPUT>,
+    /// The current output
     output: PhantomData<OUTPUT>,
 }
 
