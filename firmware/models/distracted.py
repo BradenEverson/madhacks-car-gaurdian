@@ -1,7 +1,11 @@
 import sys
+import os
+import tensorflow as tf
 from PIL import Image
 import numpy as np
-import tensorflow as tf
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+tf.get_logger().setLevel('ERROR')
 
 def process_image(image_path):
     img = Image.open(image_path)
@@ -10,13 +14,11 @@ def process_image(image_path):
     
     img = img.convert("L")
     
-    img.save("rescaled.jpg")
-    
     img_array = np.array(img, dtype=np.float32)
     
     img_array /= 255.0
     
-    img_array = np.expand_dims(img_array, axis=0)  # Shape: (1, 640, 640)
+    img_array = np.expand_dims(img_array, axis=0)
     
     return img_array
 

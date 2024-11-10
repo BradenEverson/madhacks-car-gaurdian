@@ -3,6 +3,7 @@
 
 use std::fs::File;
 use std::io::Write;
+use std::time::Duration;
 
 use firmware::peripheral;
 use firmware::pyloader::PyLoader;
@@ -32,7 +33,7 @@ async fn main() {
     let state = ServerState::default().to_async();
     let service = ServerService::new(state.clone());
 
-    let distraction_checker: PyLoader<String, f32> = PyLoader::builder()
+    let distraction_checker: PyLoader<String, String> = PyLoader::builder()
         .with_script("firmware/models/distracted.py")
         .build()
         .expect("Failed to load python");
@@ -46,15 +47,22 @@ async fn main() {
             sender.send(buf.to_vec()).expect("Failed to send");
             let mut file = File::create("frame.jpg").expect("Create new file");
             file.write_all(buf).expect("Write current buffer to image");
+        }
+    });
 
-            let distracted_driver = distraction_checker
-                .run("frame.jpg".into())
-                .expect("Command failed to run");
+    tokio::spawn(async move {
+        // Run Python inference on frame image
+        loop {
+            let distracted_driver = distraction_checker.run("frame.jpg".into());
 
-            if distracted_driver >= 0.7 {
+            if let Some(is_distracted) = distracted_driver {
+                println!("{is_distracted}");
+                /*if distracted_driver >= 0.7 {
                 println!("Driver Distracted!!! Delivering Payload");
                 peripheral::deliver_distracted_payload(&mut relay);
+                }*/
             }
+            std::thread::sleep(Duration::from_millis(500));
         }
     });
 
