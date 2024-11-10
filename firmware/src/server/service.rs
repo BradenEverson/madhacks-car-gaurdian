@@ -45,7 +45,8 @@ impl Service<Request<body::Incoming>> for ServerService {
             let state = self.state.clone();
 
             tokio::spawn(async move {
-                match websocket.await {
+                let websocket = websocket.await;
+                match websocket {
                     Ok(ws) => {
                         let (writer, _) = ws.split();
                         {
