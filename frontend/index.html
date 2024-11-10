@@ -3,41 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Gaurdian</title>
+  <title>Car Guardian</title>
   <style>
-    body,
-    html {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        width: 100%;
-        height: 100%;
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+
     canvas {
-        display: block;
-        width: 100%;
-        height: 100%;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 3em;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    #overlay.visible {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
   <canvas id="imageCanvas"></canvas>
+  <div id="overlay">!!! DRIVER DISTRACTED !!!</div>
 
   <script>
     const canvas = document.getElementById('imageCanvas');
     const context = canvas.getContext('2d');
+    const overlay = document.getElementById('overlay');
 
     function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
 
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas(); // Initial canvas resize
+    resizeCanvas(); 
 
     const ws = new WebSocket('/');
-
     ws.binaryType = 'arraybuffer';
+
     ws.onopen = () => {
       console.log('Connected to WebSocket server');
     };
@@ -62,6 +88,21 @@
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
+
+    function checkDistraction() {
+      fetch('/distracted')
+        .then(response => response.text())
+        .then(status => {
+          if (status.trim() === 'true') {
+            overlay.classList.add('visible');
+          } else {
+            overlay.classList.remove('visible');
+          }
+        })
+        .catch(error => console.error('Error checking distraction status:', error));
+    }
+
+    setInterval(checkDistraction, 500); 
   </script>
 </body>
 </html>
