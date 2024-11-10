@@ -61,7 +61,8 @@ async fn main() {
                 let probability = final_line
                     .parse::<f32>()
                     .expect("Failed to parse final line");
-                if probability >= 0.7 {
+                println!("{probability}");
+                if probability >= 0.55 {
                     println!("Driver Distracted!!! Delivering Payload");
                     peripheral::deliver_distracted_payload(&mut relay);
                 }
