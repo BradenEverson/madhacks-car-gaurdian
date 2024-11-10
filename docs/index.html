@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Car Guardian - A MadHacks Solution</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="madhax.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+  />
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#home">Car Guardian</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#demo">Live Demo</a></li>
+          <li class="nav-item"><a class="nav-link" href="#project">Project</a></li>
+          <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header Section -->
+  <header id="home" class="text-center py-5 bg-dark text-white">
+    <div class="container">
+      <h1>Car Guardian - MadHacks 2024 Project</h1>
+      <p>A cutting-edge solution by MSOE students to enhance road safety through advanced AI technology.</p>
+      <a href="https://devpost.com/YOUR_PROJECT_PAGE" target="_blank" class="btn btn-light btn-lg mt-4">View on Devpost</a>
+    </div>
+  </header>
+  
+
+  <!-- Live Demo Section -->
+<section id="demo" class="py-5 bg-dark text-light">
+    <div class="container text-center">
+      <h2>Demo</h2>
+      <p class="lead">See our convolutional neural network (CNN) in action, identifying and reacting to real-time driving scenarios.</p>
+      <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/55Ia2MqiepY" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- Project Details Section -->
+  <section id="project" class="py-5 bg-dark text-light">
+    <div class="container text-center">
+      <h2>About Car Guardian</h2>
+      <p>Car Guardian was developed at MadHacks 2024 to reduce road accidents caused by distracted driving. This project uses a convolutional neural network (CNN) to monitor driver behavior and issue alerts, enhancing overall road safety. Rust was chosen for its performance and reliability in embedded systems and web sockets.</p>
+      <h5>Main Features</h5>
+      <ul class="list-unstyled">
+        <li><i class="fa-solid fa-check-circle text-success"></i> Real-time driver monitoring and analysis</li>
+        <li><i class="fa-solid fa-check-circle text-success"></i> High-performance Rust-based backend for fast processing</li>
+        <li><i class="fa-solid fa-check-circle text-success"></i> Bonding with each other at MadHacks 2024</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="py-5 bg-dark text-light">
+    <div class="container text-center">
+      <h2>Meet the Team</h2>
+      <p>Our team is made up of passionate MSOE students committed to developing innovative solutions to improve safety and sustainability.</p>
+      <div class="row">
+        <div class="col-md-4">
+          <img src="pictures/bradencompressed.png" alt="Braden Everson" class="img-fluid rounded-circle mb-3">
+          <h5>Braden Everson</h5>
+          <p>Developer & Designer</p>
+          <p>Studying: B.S. Computer Science, M.S. Machine Learning</p>
+          <p>Year: Sophomore</p>
+        </div>
+        <div class="col-md-4">
+          <img src="pictures/salvinchowdhury.jpg" alt="Salvin Chowdhury" class="img-fluid rounded-circle mb-3">
+          <h5>Salvin Chowdhury</h5>
+          <p>Developer & Researcher</p>
+          <p>Studying: B.S. Computer Science</p>
+          <p>Year: Sophomore</p>
+        </div>
+        <div class="col-md-4">
+          <img src="pictures/chrissy.JPG" alt="Christian Zastrow" class="img-fluid rounded-circle mb-3">
+          <h5>Christian Zastrow</h5>
+          <p>Project Manager & Researcher</p>
+          <p>Studying: B.S. Electrical Engineering, Minor in Physics</p>
+          <p>Year: Sophomore</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Presentation Section -->
+  <section id="presentation" class="py-5 bg-dark text-light">
+    <div class="container text-center">
+      <h2>Project Presentation</h2>
+      <p class="lead">Explore our project presentation to understand the problem, our solution, and the technology behind Car Guardian.</p>
+
+      <!-- Bootstrap Carousel for Presentation Slides -->
+      <div id="presentationCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <!-- Slide 1 -->
+          <div class="carousel-item active">
+            <img src="pictures/SlidesJPG/1.jpg" class="d-block w-100 rounded-presentation" alt="Slide 1">
+          </div>
+          <!-- Additional slides as needed -->
+          <!-- Slide 2 -->
+          <div class="carousel-item">
+            <img src="pictures/SlidesJPG/2.jpg" class="d-block w-100 rounded-presentation" alt="Slide 2">
+          </div>
+          <div class="carousel-item">
+            <img src="pictures/SlidesJPG/3.jpg" class="d-block w-100 rounded-presentation" alt="Slide 3">
+          </div>
+          <div class="carousel-item">
+            <img src="pictures/SlidesJPG/4.jpg" class="d-block w-100 rounded-presentation" alt="Slide 4">
+          </div>
+          <div class="carousel-item">
+            <img src="pictures/SlidesJPG/5.jpg" class="d-block w-100 rounded-presentation" alt="Slide 5">
+          </div>
+          <div class="carousel-item">
+            <img src="pictures/SlidesJPG/6.jpg" class="d-block w-100 rounded-presentation" alt="Slide 6">
+          </div>
+          <div class="carousel-item">
+            <img src="pictures/SlidesJPG/7.jpg" class="d-block w-100 rounded-presentation" alt="Slide 7">
+          </div>
+          <div class="carousel-item">
+            <img src="pictures/SlidesJPG/8.jpg" class="d-block w-100 rounded-presentation" alt="Slide 8">
+          </div>
+        </div>
+
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#presentationCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#presentationCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-5 bg-dark text-light">
+    <div class="container text-center">
+      <h2>Contact Us</h2>
+      <p>If you have any questions or would like to learn more about Car Guardian, please reach out to us!</p>
+      <a href="mailto:zastrowc@msoe.edu" class="btn btn-primary">Email Us</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-3 bg-dark text-white">
+    <p>&copy; 2024 MadHacks Car Guardian Team. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
