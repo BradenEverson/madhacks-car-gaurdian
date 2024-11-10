@@ -36,7 +36,8 @@ impl<INPUT: Default + PyArg, OUTPUT: Default + FromStr> PyLoader<INPUT, OUTPUT> 
         for arg in input.to_cli_arg().trim().split(' ') {
             output.arg(arg);
         }
-        let output = output.stdout(Stdio::piped()).output().ok()?;
+        let output = output.stdout(Stdio::piped()).spawn().ok()?;
+        let output = output.wait_with_output().ok()?;
 
         if output.status.success() {
             let stdout_str = String::from_utf8(output.stdout).ok()?;

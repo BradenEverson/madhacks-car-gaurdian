@@ -56,11 +56,15 @@ async fn main() {
             let distracted_driver = distraction_checker.run("frame.jpg".into());
 
             if let Some(is_distracted) = distracted_driver {
-                println!("{is_distracted}");
-                /*if distracted_driver >= 0.7 {
-                println!("Driver Distracted!!! Delivering Payload");
-                peripheral::deliver_distracted_payload(&mut relay);
-                }*/
+                let lines: Vec<_> = is_distracted.split("\n").collect();
+                let final_line = lines[lines.len() - 1];
+                let probability = final_line
+                    .parse::<f32>()
+                    .expect("Failed to parse final line");
+                if probability >= 0.7 {
+                    println!("Driver Distracted!!! Delivering Payload");
+                    peripheral::deliver_distracted_payload(&mut relay);
+                }
             }
             std::thread::sleep(Duration::from_millis(500));
         }

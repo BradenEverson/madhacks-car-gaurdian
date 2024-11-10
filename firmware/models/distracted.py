@@ -36,7 +36,7 @@ if __name__ == "__main__":
     
     image_path = sys.argv[1]
     
-    model_path = "models/distracted_driver_model.keras"
+    model_path = "models/distracted_driver_model_92.keras"
     
     processed_image = process_image(image_path)
     
