@@ -11,10 +11,10 @@ use v4l::prelude::MmapStream;
 use v4l::{buffer::Type, Device};
 
 fn main() {
-    let distraction_checker: PyLoader<String, bool> = PyLoader::builder()
-        .with_script("models/check_distraction.py")
+    let distraction_checker: PyLoader<String, i32> = PyLoader::builder()
+        .with_script("firmware/models/distracted.py")
         .build()
-        .expect("Failed to load pythong");
+        .expect("Failed to load python");
 
     let mut dev = Device::new(0).expect("Failed to open camera");
     let mut stream = MmapStream::with_buffers(&mut dev, Type::VideoCapture, 4)
@@ -34,7 +34,8 @@ fn main() {
             .run("frame.jpg".into())
             .expect("Command failed to run");
 
-        if distracted_driver {
+        if distracted_driver == 1 {
+            println!("Driver Distracted!!! Delivering Payload");
             peripheral::deliver_distracted_payload();
         }
     }
