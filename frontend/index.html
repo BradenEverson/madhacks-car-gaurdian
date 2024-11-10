@@ -70,13 +70,18 @@
 
     ws.onmessage = (event) => {
       if (event.data instanceof ArrayBuffer) {
-        const blob = new Blob([event.data], { type: 'image/jpeg' });
-        const img = new Image();
-        
-        img.onload = () => {
-          context.drawImage(img, 0, 0, canvas.width, canvas.height);
-        };
-        
+          const blob = new Blob([event.data], { type: 'image/jpeg' });
+          const img = new Image();
+
+          img.onload = () => {
+              context.clearRect(0, 0, canvas.width, canvas.height);
+              context.save();
+              context.translate(0, canvas.height);
+              context.scale(1, -1);
+              context.drawImage(img, 0, 0, canvas.width, canvas.height);
+              context.restore();
+          };
+
         img.src = URL.createObjectURL(blob);
       }
     };
