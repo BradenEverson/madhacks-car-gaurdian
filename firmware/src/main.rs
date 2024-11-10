@@ -32,7 +32,7 @@ async fn main() {
     let state = ServerState::default().to_async();
     let service = ServerService::new(state.clone());
 
-    let distraction_checker: PyLoader<String, i32> = PyLoader::builder()
+    let distraction_checker: PyLoader<String, f32> = PyLoader::builder()
         .with_script("firmware/models/distracted.py")
         .build()
         .expect("Failed to load python");
@@ -51,7 +51,7 @@ async fn main() {
                 .run("frame.jpg".into())
                 .expect("Command failed to run");
 
-            if distracted_driver == 1 {
+            if distracted_driver >= 0.7 {
                 println!("Driver Distracted!!! Delivering Payload");
                 peripheral::deliver_distracted_payload(&mut relay);
             }
