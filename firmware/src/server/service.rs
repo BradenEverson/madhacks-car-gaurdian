@@ -61,6 +61,14 @@ impl Service<Request<body::Incoming>> for ServerService {
                 Method::GET => {
                     let file = match req.uri().path() {
                         "/" => "index.html",
+                        "/distracted" => {
+                            let distracted =
+                                { futures::executor::block_on(self.state.read()).is_distracted() };
+                            match distracted {
+                                true => "true.html",
+                                false => "false.html",
+                            }
+                        }
                         _ => "404.html",
                     };
 

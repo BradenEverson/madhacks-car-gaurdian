@@ -24,6 +24,9 @@ async fn main() {
     let gpio = Gpio::new().expect("Initialize GPIO");
     let mut relay = gpio.get_output(Pin5).expect("Initialize relay pin");
     let listener = TcpListener::bind("0.0.0.0:1911").await.unwrap();
+
+    let mut distracted = false;
+
     println!(
         "Listening on http://localhost:{}",
         listener.local_addr().unwrap().port()
@@ -50,6 +53,7 @@ async fn main() {
         }
     });
 
+    let state_clone = state.clone();
     tokio::spawn(async move {
         // Run Python inference on frame image
         loop {
@@ -62,6 +66,16 @@ async fn main() {
                     .parse::<f32>()
                     .expect("Failed to parse final line");
                 println!("{probability}");
+
+                let is_distracted = probability >= 0.55;
+
+                if is_distracted != distracted {
+                    {
+                        state_clone.write().await.toggle_distraction();
+                    }
+                    distracted = is_distracted
+                }
+
                 if probability >= 0.55 {
                     println!("Driver Distracted!!! Delivering Payload");
                     peripheral::deliver_distracted_payload(&mut relay);

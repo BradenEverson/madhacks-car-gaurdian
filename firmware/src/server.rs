@@ -25,6 +25,16 @@ impl ServerState {
         Arc::new(RwLock::new(self))
     }
 
+    /// Returns whether the user is distracted
+    pub fn is_distracted(&self) -> bool {
+        self.distracted
+    }
+
+    /// Toggles the distracted bool
+    pub fn toggle_distraction(&mut self) {
+        self.distracted = !self.distracted
+    }
+
     /// Assigns a websocket write stream to the state
     pub fn assign_websocket(&mut self, video_feed: WebSocketWriteStream) {
         self.video_feed = Some(video_feed);
