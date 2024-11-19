@@ -9,12 +9,10 @@ use tokio_tungstenite::tungstenite::Message;
 
 pub mod service;
 
-/// The server's current state, whether driver is distracted and the current data buffer receiving
+/// The server's current state and the current data buffer receiving
 /// channel
 #[derive(Default)]
 pub struct ServerState {
-    /// Is the driver currently distracted
-    pub distracted: bool,
     /// Websocket messaging channel
     pub video_feed: Option<WebSocketWriteStream>,
 }
@@ -23,16 +21,6 @@ impl ServerState {
     /// Creates a new server state that is thread safe
     pub fn to_async(self) -> Arc<RwLock<Self>> {
         Arc::new(RwLock::new(self))
-    }
-
-    /// Returns whether the user is distracted
-    pub fn is_distracted(&self) -> bool {
-        self.distracted
-    }
-
-    /// Toggles the distracted bool
-    pub fn toggle_distraction(&mut self) {
-        self.distracted = !self.distracted
     }
 
     /// Assigns a websocket write stream to the state

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Guardian</title>
+  <title>Live Video Feed</title>
   <style>
     body, html {
       margin: 0;
@@ -46,12 +46,9 @@
 </head>
 <body>
   <canvas id="imageCanvas"></canvas>
-  <div id="overlay">!!! DRIVER DISTRACTED !!!</div>
-
   <script>
     const canvas = document.getElementById('imageCanvas');
     const context = canvas.getContext('2d');
-    const overlay = document.getElementById('overlay');
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -75,9 +72,6 @@
 
           img.onload = () => {
               context.clearRect(0, 0, canvas.width, canvas.height);
-              context.save();
-              context.translate(0, canvas.height);
-              context.scale(1, -1);
               context.drawImage(img, 0, 0, canvas.width, canvas.height);
               context.restore();
           };
@@ -93,21 +87,6 @@
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
-
-    function checkDistraction() {
-      fetch('/distracted')
-        .then(response => response.text())
-        .then(status => {
-          if (status.trim() === 'true') {
-            overlay.classList.add('visible');
-          } else {
-            overlay.classList.remove('visible');
-          }
-        })
-        .catch(error => console.error('Error checking distraction status:', error));
-    }
-
-    setInterval(checkDistraction, 500); 
   </script>
 </body>
 </html>

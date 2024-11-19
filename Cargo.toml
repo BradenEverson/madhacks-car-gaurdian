@@ -4,7 +4,7 @@ resolver = "2"
 
 [workspace.package]
 version = "0.1.0"
-authors = ["BradenEverson", "Christian Zastrow", "Salvin Chowdhury"]
+authors = ["BradenEverson"]
 
 [workspace.lints.rust]
 missing_docs = "warn"
